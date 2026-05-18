@@ -14,19 +14,24 @@ export default function Payments({ data, refresh, navigate }: { data: any, refre
   const [searchTerm, setSearchTerm] = useState('');
   const [methodFilter, setMethodFilter] = useState('all');
 
-  const filteredPayments = data.payments.filter((p: any) => {
-    const client = data.clients.find((c: any) => c.id === p.clientId);
+  const payments = data?.payments || [];
+  const clients = data?.clients || [];
+  const appointments = data?.appointments || [];
+  const settings = data?.settings || {};
+
+  const filteredPayments = payments.filter((p: any) => {
+    const client = clients.find((c: any) => c.id === p.clientId);
     const matchesSearch = client?.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesMethod = methodFilter === 'all' || p.method === methodFilter;
     return matchesSearch && matchesMethod;
   }).sort((a: any, b: any) => new Date(b.paidAt).getTime() - new Date(a.paidAt).getTime());
 
-  const totalIncome = data.payments.reduce((acc: number, cur: any) => acc + cur.amount, 0);
+  const totalIncome = payments.reduce((acc: number, cur: any) => acc + cur.amount, 0);
   const filteredIncome = filteredPayments.reduce((acc: number, cur: any) => acc + cur.amount, 0);
   
-  const pendingDues = data.appointments
+  const pendingDues = appointments
     .filter((a: any) => a.paymentStatus === 'unpaid')
-    .reduce((acc: number, cur: any) => acc + (cur.fee || data.settings.fee), 0);
+    .reduce((acc: number, cur: any) => acc + (cur.fee || settings.fee), 0);
 
   const handleLogPayment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -136,7 +141,7 @@ export default function Payments({ data, refresh, navigate }: { data: any, refre
                       <SelectValue placeholder="Select Patient" />
                     </SelectTrigger>
                     <SelectContent className="rounded-2xl border-border-soft bg-card">
-                      {data.clients.map((c: any) => (
+                      {clients.map((c: any) => (
                         <SelectItem key={c.id} value={c.id} className="text-text-main font-medium">{c.name}</SelectItem>
                       ))}
                     </SelectContent>
@@ -144,7 +149,7 @@ export default function Payments({ data, refresh, navigate }: { data: any, refre
                 </div>
                 <div className="space-y-2">
                   <Label className="text-xs font-semibold uppercase tracking-wider text-text-muted ml-1">Amount (₹)</Label>
-                  <Input name="amount" type="number" defaultValue={data.settings.fee} required className="h-14 rounded-2xl border-border-soft bg-background px-6 font-semibold text-text-main" />
+                  <Input name="amount" type="number" defaultValue={settings.fee} required className="h-14 rounded-2xl border-border-soft bg-background px-6 font-semibold text-text-main" />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-xs font-semibold uppercase tracking-wider text-text-muted ml-1">Method</Label>

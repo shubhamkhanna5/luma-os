@@ -7,9 +7,12 @@ import { toast } from 'sonner';
 
 export default function Dashboard({ data, refresh, navigate }: { data: any, refresh: () => void, navigate: (tab: string) => void }) {
   const today = new Date();
-  const todayAppointments = data.appointments.filter((a: any) => isSameDay(new Date(a.date), today));
-  const pendingPayments = data.appointments.filter((a: any) => a.paymentStatus === 'unpaid' && new Date(a.date) <= today);
-  const nextAppointment = data.appointments
+  const appointments = data?.appointments || [];
+  const settings = data?.settings || {};
+  
+  const todayAppointments = appointments.filter((a: any) => isSameDay(new Date(a.date), today));
+  const pendingPayments = appointments.filter((a: any) => a.paymentStatus === 'unpaid' && new Date(a.date) <= today);
+  const nextAppointment = appointments
     .filter((a: any) => new Date(a.date) >= today && a.status === 'upcoming')
     .sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
 
@@ -35,7 +38,7 @@ export default function Dashboard({ data, refresh, navigate }: { data: any, refr
         body: JSON.stringify({
           appointmentId: appointment.id,
           clientId: appointment.clientId,
-          amount: appointment.fee || data.settings.fee,
+          amount: appointment.fee || settings.fee,
           method: 'Cash'
         })
       });

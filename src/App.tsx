@@ -27,32 +27,42 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const DEFAULT_DATA = {
+    clients: [],
+    appointments: [],
+    payments: [],
+    settings: {
+      therapistName: "Clinical Practice",
+      sessionDuration: 60,
+      workingHours: { start: "09:00", end: "17:00" },
+      fee: 1500,
+      meetingLink: ""
+    }
+  };
+
   const [data, setData] = useState<any>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('serene_data');
-      return saved ? JSON.parse(saved) : null;
+      return saved ? JSON.parse(saved) : DEFAULT_DATA;
     }
-    return null;
+    return DEFAULT_DATA;
   });
-  const [loading, setLoading] = useState(!data);
+  const [loading, setLoading] = useState(false);
   const [syncStatus, setSyncStatus] = useState<'synced' | 'syncing' | 'offline'>('syncing');
 
   const fetchData = async () => {
     setSyncStatus('syncing');
     try {
       const res = await fetch('/api/db');
+      if (!res.ok) throw new Error('Failed to fetch');
       const json = await res.json();
       setData(json);
       localStorage.setItem('serene_data', JSON.stringify(json));
-      setLoading(false);
       setSyncStatus('synced');
     } catch (e) {
       setSyncStatus('offline');
-      if (!data) {
-        toast.error('Offline: No local data found');
-      } else {
-        toast.info('Viewing offline version');
-      }
+      console.warn('API error, using local data', e);
+    } finally {
       setLoading(false);
     }
   };

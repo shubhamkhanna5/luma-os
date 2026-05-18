@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 
 export default function Settings({ data, refresh, navigate, darkMode, onToggleDarkMode }: { data: any, refresh: () => void, navigate: (tab: string) => void, darkMode: boolean, onToggleDarkMode: () => void }) {
   const [loading, setLoading] = useState(false);
+  const settings = data?.settings || {};
 
   const handleUpdateSettings = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -48,28 +49,28 @@ export default function Settings({ data, refresh, navigate, darkMode, onToggleDa
         </div>
       </header>
 
-      <form key={JSON.stringify(data.settings)} onSubmit={handleUpdateSettings} className="space-y-8">
+      <form key={JSON.stringify(settings)} onSubmit={handleUpdateSettings} className="space-y-8">
         <section className="space-y-6">
           <h3 className="text-lg font-semibold text-text-muted px-1 uppercase tracking-wider">Clinical Profile</h3>
           <Card className="rounded-3xl border border-border-soft shadow-sm bg-card overflow-hidden p-8">
             <div className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="therapistName" className="text-xs font-semibold uppercase tracking-wider text-text-muted ml-1">Practice Name</Label>
-                <Input name="therapistName" defaultValue={data.settings.therapistName} className="rounded-2xl border-border-soft bg-background h-14 px-6 text-text-main font-semibold" />
+                <Input name="therapistName" defaultValue={settings.therapistName} className="rounded-2xl border-border-soft bg-background h-14 px-6 text-text-main font-semibold" />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="fee" className="text-xs font-semibold uppercase tracking-wider text-text-muted ml-1">Default Fee (₹)</Label>
-                  <Input name="fee" type="number" defaultValue={data.settings.fee} className="rounded-2xl border-border-soft bg-background h-14 px-6 text-text-main font-semibold" />
+                  <Input name="fee" type="number" defaultValue={settings.fee} className="rounded-2xl border-border-soft bg-background h-14 px-6 text-text-main font-semibold" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="meetingLink" className="text-xs font-semibold uppercase tracking-wider text-text-muted ml-1">Online Meeting Link</Label>
-                  <Input name="meetingLink" placeholder="Zoom, Meet, etc." defaultValue={data.settings.meetingLink} className="rounded-2xl border-border-soft bg-background h-14 px-6 text-text-main font-semibold" />
+                  <Input name="meetingLink" placeholder="Zoom, Meet, etc." defaultValue={settings.meetingLink} className="rounded-2xl border-border-soft bg-background h-14 px-6 text-text-main font-semibold" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="sessionDuration" className="text-xs font-semibold uppercase tracking-wider text-text-muted ml-1">Session Length (min)</Label>
-                  <Input name="sessionDuration" type="number" defaultValue={data.settings.sessionDuration} className="rounded-2xl border-border-soft bg-background h-14 px-6 text-text-main font-semibold" />
+                  <Input name="sessionDuration" type="number" defaultValue={settings.sessionDuration} className="rounded-2xl border-border-soft bg-background h-14 px-6 text-text-main font-semibold" />
                 </div>
               </div>
             </div>
@@ -82,11 +83,11 @@ export default function Settings({ data, refresh, navigate, darkMode, onToggleDa
              <div className="grid grid-cols-2 gap-6">
                <div className="space-y-2">
                  <Label className="text-xs font-semibold uppercase tracking-wider text-text-muted ml-1">Start</Label>
-                 <Input name="workStart" type="time" defaultValue={data.settings.workingHours.start} className="rounded-2xl border-border-soft bg-background h-14 px-6 text-text-main font-semibold text-center" />
+                 <Input name="workStart" type="time" defaultValue={settings.workingHours?.start || "09:00"} className="rounded-2xl border-border-soft bg-background h-14 px-6 text-text-main font-semibold text-center" />
                </div>
                <div className="space-y-2">
                  <Label className="text-xs font-semibold uppercase tracking-wider text-text-muted ml-1">End</Label>
-                 <Input name="workEnd" type="time" defaultValue={data.settings.workingHours.end} className="rounded-2xl border-border-soft bg-background h-14 px-6 text-text-main font-semibold text-center" />
+                 <Input name="workEnd" type="time" defaultValue={settings.workingHours?.end || "17:00"} className="rounded-2xl border-border-soft bg-background h-14 px-6 text-text-main font-semibold text-center" />
                </div>
              </div>
           </Card>

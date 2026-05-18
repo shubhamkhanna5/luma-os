@@ -19,6 +19,10 @@ export default function AppointmentCalendar({ data, refresh, navigate }: { data:
   const [startTime, setStartTime] = useState('09:00');
   const [endTime, setEndTime] = useState('10:00');
   
+  const appointments = data?.appointments || [];
+  const clients = data?.clients || [];
+  const settings = data?.settings || {};
+
   const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const start = e.target.value;
     setStartTime(start);
@@ -30,7 +34,7 @@ export default function AppointmentCalendar({ data, refresh, navigate }: { data:
     setEndTime(end);
   };
 
-  const events = data.appointments.map((apt: any) => ({
+  const events = appointments.map((apt: any) => ({
     id: apt.id,
     title: apt.clientName,
     start: `${apt.date}T${apt.startTime}`,
@@ -50,7 +54,7 @@ export default function AppointmentCalendar({ data, refresh, navigate }: { data:
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const clientId = formData.get('clientId') as string;
-    const client = data.clients.find((c: any) => c.id === clientId);
+    const client = clients.find((c: any) => c.id === clientId);
 
     const baseAppointment = {
       clientId,
@@ -59,7 +63,7 @@ export default function AppointmentCalendar({ data, refresh, navigate }: { data:
       startTime: formData.get('startTime'),
       endTime: formData.get('endTime'),
       sessionType: formData.get('sessionType'),
-      fee: Number(formData.get('fee')) || data.settings.fee,
+      fee: Number(formData.get('fee')) || settings.fee,
       status: 'upcoming',
       paymentStatus: 'unpaid',
       notes: ''
@@ -103,7 +107,7 @@ export default function AppointmentCalendar({ data, refresh, navigate }: { data:
                     <SelectValue placeholder="Select Client" />
                   </SelectTrigger>
                   <SelectContent className="rounded-2xl border-border-soft bg-card">
-                    {data.clients.map((c: any) => (
+                    {clients.map((c: any) => (
                       <SelectItem key={c.id} value={c.id} className="font-medium text-text-main">{c.name}</SelectItem>
                     ))}
                   </SelectContent>
