@@ -1,0 +1,24 @@
+{
+  "clients": [
+    {
+      "name": "dinkit",
+      "phone": "9650081896",
+      "email": null,
+      "notes": null,
+      "category": "Clinic",
+      "id": "1779099146447",
+      "createdAt": "2026-05-18T10:12:26.447Z"
+    }
+  ],
+  "appointments": [],
+  "payments": [],
+  "settings": {
+    "therapistName": "Clinical Practice",
+    "sessionDuration": 60,
+    "workingHours": {
+      "start": "09:00",
+      "end": "17:00"
+    },
+    "fee": 100
+  }
+}

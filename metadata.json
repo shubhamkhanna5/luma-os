@@ -1,0 +1,8 @@
+{
+  "name": "LUMA OS",
+  "description": "A calm, human-centric management tool for modern clinics. Prioritizes daily flow, one-handed mobile usability, and a warm, safe clinical aesthetic.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
